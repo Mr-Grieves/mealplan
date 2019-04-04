@@ -1,5 +1,7 @@
 package com.example.nathanvw.mealplan;
 
+import android.util.Log;
+
 import java.util.Vector;
 
 /**
@@ -15,17 +17,28 @@ import java.util.Vector;
 class RecipeIngredient extends GenericIngredient {
     private static final String TAG = "nvw-recing";
 
-    private String details = null;
-    private float amnt_tot = 0;
-    private float amnt_used = 0;
+    private String details;
+    private float amount;
+    //TODO: private float amnt_used = 0;
+
+    RecipeIngredient(){
+        super();
+        this.amount = -1;
+        details = null;
+    }
 
     RecipeIngredient(GenericIngredient _ing, float _tot, String _deets){
         super(_ing);
         this.details = _deets;
-        this.amnt_tot = _tot;
-        this.amnt_used = 0;
+        this.amount = _tot;
     }
 
-    float getAmount(){return this.amnt_tot;}
+    void printIngredient(){
+        Log.i(TAG,"Recipe Ingredient - "+amount+((unit==Unit.self)?" ":" "+unit+" ")+name);
+    }
+
+    float getAmount(){return this.amount;}
     String getDetails(){return this.details;}
+    void setAmount(float _a){this.amount = _a;}
+    void setDetails(String _s){this.details = _s;}
 }

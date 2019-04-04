@@ -85,6 +85,9 @@ public class MainActivity extends AppCompatActivity {
                 //recipe.printRecipe();
             }
         });
+
+        btn_LoadIngredients.callOnClick();
+        btn_LoadRecipe.callOnClick();
     }
 
     // Loads all ingredients from ingredient_table.csv database

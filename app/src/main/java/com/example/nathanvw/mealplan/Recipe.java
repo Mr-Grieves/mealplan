@@ -22,7 +22,7 @@ class Recipe {
         this.steps = new Vector<RecipeStep>();
     }
 
-    void addNewIngredient(String _name, float _amount, Unit _unit, String _details){
+    void addNewIngredient(String _name, float _amount, Unit _recipe_unit, String _details){
         GenericIngredient gi = MainActivity.findGenericIngredient(_name);
 
         if(gi == null){
@@ -31,8 +31,8 @@ class Recipe {
             return;
         }
 
-        if(gi.getUnit() != _unit){
-            Log.w(TAG, "Stored unit for "+_name+" ("+gi.getUnit()+") is different than recipe's ("+_unit+")");
+        if(gi.getUnit() != _recipe_unit){
+            Log.w(TAG, "Stored unit for "+_name+" ("+gi.getUnit()+") is different than recipe's ("+_recipe_unit+")");
             // TODO: convert _unit to gi.getUnit()
 
         }
