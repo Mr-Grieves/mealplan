@@ -71,6 +71,13 @@ class GenericIngredient {
         this.shelflife = _sl;
     }
 
+    void setGenerics(GenericIngredient _gi){
+        this.name = _gi.name;
+        this.group = _gi.group;
+        this.unit = _gi.unit;
+        this.shelflife = _gi.shelflife;
+    }
+
     void printIngredient(){
         Log.i(TAG,"Ingredient - Name: "+String.format("%-20s",name)+"Group: "+String.format("%-12s",group)+"Unit: "+String.format("%-7s",unit)+"Shelflife: "+shelflife+" days");
     }

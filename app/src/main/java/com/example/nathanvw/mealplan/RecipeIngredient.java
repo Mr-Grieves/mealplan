@@ -34,11 +34,20 @@ class RecipeIngredient extends GenericIngredient {
     }
 
     void printIngredient(){
-        Log.i(TAG,"Recipe Ingredient - "+amount+((unit==Unit.self)?" ":" "+unit+" ")+name);
+        Log.i(TAG,"Recipe Ingredient - "+
+                amount +
+                ((unit==Unit.self)?" ":" "+unit+" ") +
+                name +
+                ((details==null)?"":", "+details));
     }
 
     float getAmount(){return this.amount;}
     String getDetails(){return this.details;}
     void setAmount(float _a){this.amount = _a;}
-    void setDetails(String _s){this.details = _s;}
+    void addDetail(String _s){
+        if (details == null)
+            this.details = _s;
+        else
+            this.details = this.details + ", " + _s;
+    }
 }

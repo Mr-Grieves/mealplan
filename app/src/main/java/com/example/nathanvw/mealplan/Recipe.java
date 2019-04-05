@@ -22,7 +22,7 @@ class Recipe {
         this.steps = new Vector<RecipeStep>();
     }
 
-    void addNewIngredient(String _name, float _amount, Unit _recipe_unit, String _details){
+    void searchAndAddIngredient(String _name, float _amount, Unit _recipe_unit, String _details){
         GenericIngredient gi = MainActivity.findGenericIngredient(_name);
 
         if(gi == null){
@@ -49,14 +49,14 @@ class Recipe {
     void printRecipe(){
         Log.i(TAG,"\n\t--- Ingredients ---");
         for(RecipeIngredient ri : ingredients){
-            Log.i(TAG,"\t\t - "+ri.getAmount() + " " +
-                    ((ri.getUnit().equals(Unit.self))? "" : (ri.getUnit()+" "))+
-                    ri.getName() +
-                    ((ri.getDetails() == null)? "" : (", "+ri.getDetails())));
+            ri.printIngredient();
         }
         Log.i(TAG,"\n\t--- Steps ---");
         for(RecipeStep rs : steps){
+            rs.printStep();
             Log.i(TAG,"\t\t - "+rs.getText());
         }
     }
+
+    void addIngredient(RecipeIngredient ri) {ingredients.add(ri);}
 }

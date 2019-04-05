@@ -24,4 +24,7 @@ class RecipeStep {
 
     String getText(){return this.instruction;}
 
+    void printStep(){//TODO:
+    }
+
 }

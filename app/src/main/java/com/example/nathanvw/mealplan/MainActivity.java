@@ -141,18 +141,18 @@ public class MainActivity extends AppCompatActivity {
     public void addSpeltBerrieSaladRecipe(){
         Recipe recipe = new Recipe();
 
-        recipe.addNewIngredient("radish",5, Unit.self, "very thinly sliced");
-        recipe.addNewIngredient("plum vinegar",2, Unit.tbsp,null);
-        recipe.addNewIngredient("apple cider vinegar",2,Unit.tbsp,null);
+        recipe.searchAndAddIngredient("radish",5, Unit.self, "very thinly sliced");
+        recipe.searchAndAddIngredient("plum vinegar",2, Unit.tbsp,null);
+        recipe.searchAndAddIngredient("apple cider vinegar",2,Unit.tbsp,null);
         recipe.addNewStep("Place radishes in a bowl/glass jar and add vinegars; toss well. Marinate for at least 6 hours and up to 4 days in the fridge");
 
-        recipe.addNewIngredient("spelt berries",1.25f,Unit.cup,"washed and soaked 12 to 24 hrs in 3 cups filtered water");
-        recipe.addNewIngredient("olive oil",3,Unit.tbsp,"divided");
-        recipe.addNewIngredient("garlic",1,Unit.self,"minced");
-        recipe.addNewIngredient("peas",2,Unit.cup,"frozen");
-        recipe.addNewIngredient("parsley",0.5f,Unit.cup,"chopped");
-        recipe.addNewIngredient("dill",0.25f,Unit.cup,"chopped");
-        recipe.addNewIngredient("feta",5,Unit.oz,"drained and crumbled");
+        recipe.searchAndAddIngredient("spelt berries",1.25f,Unit.cup,"washed and soaked 12 to 24 hrs in 3 cups filtered water");
+        recipe.searchAndAddIngredient("olive oil",3,Unit.tbsp,"divided");
+        recipe.searchAndAddIngredient("garlic",1,Unit.self,"minced");
+        recipe.searchAndAddIngredient("peas",2,Unit.cup,"frozen");
+        recipe.searchAndAddIngredient("parsley",0.5f,Unit.cup,"chopped");
+        recipe.searchAndAddIngredient("dill",0.25f,Unit.cup,"chopped");
+        recipe.searchAndAddIngredient("feta",5,Unit.oz,"drained and crumbled");
 
         recipe.addNewStep("Drain and rinse spelt berries. Place in a pot and cover with about 4 cups filtered water. Bring to the boil, cover, reduce heat to low, and simmer for 11/2 hrs or until tender. Add extra water as needed to keep spelt berries covered whilst simmering. remove from heat, drain well, and set aside to cool.");
         recipe.addNewStep("If using fresh peas, bring a small pot of water to boil. Add peas, and cook for 2 minutes or until tender. Remove from the heat, drain, and set aside to cool. If using frozen, skip this step.");
