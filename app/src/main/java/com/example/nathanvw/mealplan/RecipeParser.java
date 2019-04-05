@@ -25,7 +25,7 @@ class RecipeParser {
     private static final String TAG = "nvw-recpar";
 
     private HashMap<String,Unit> known_measurements = new HashMap<String,Unit>() {{
-        //sel
+        //self
         // ...
 
         //g
@@ -128,10 +128,6 @@ class RecipeParser {
 
             RecipeIngredient rec_ing = new RecipeIngredient();
 
-            // What to do now...
-            // ex1: "    1 large head of broccoli (1¼–1½ pounds), cut into florets, stalk peeled and finely chopped"
-            // ex2: "    2 tablespoons extra-virgin olive oil, plus more for drizzling"
-
             // 0. split into phrases
             String[] phrases = ing_text.split(",|\\(|\\)|\\.");
             for (String phrase : phrases) {
@@ -139,21 +135,11 @@ class RecipeParser {
                 phrase = phrase.replaceAll("(^\\s*)(.*)(\\s*$)","$2");
 
                 // Skip empties
-                if (phrase.equals(""))
+                if (phrase.isEmpty())
                     continue;
 
                 // No caps
                 phrase = phrase.toLowerCase();
-
-                /* ex1: Phrases =
-                    1 large head of broccoli
-                    1¼–1½ pounds
-                    cut into florets
-                    stalk peeled and finely chopped */
-
-                /* ex2: Phrases =
-                    2 tablespoons extra-virgin olive oil
-    	            plus more for drizzling */
 
                 // 1. search for amounts: "1" or "2 tablespoons"
                 if(rec_ing.getAmount() == -1)
@@ -164,12 +150,13 @@ class RecipeParser {
                     phrase = searchForName(phrase, rec_ing);
 
                 // Add remainder to details:
-                rec_ing.addDetail(phrase);
+                if(phrase != null)
+                    if(!phrase.isEmpty()) {
+                        rec_ing.addDetail(phrase.trim());
+                    }
             }
-
             recipe.addIngredient(rec_ing);
         }
-
         recipe.printRecipe();
     }
 
@@ -221,24 +208,35 @@ class RecipeParser {
         // TODO: handle names with spaces in them!!!
         // ...
 
+        Vector<Integer> all_matches = new Vector<Integer>();
         GenericIngredient gi = null;
+
         // For every word in the given phrase, search the ingredient_table
         for (String word : phrase.split("\\s")) {
-            gi = MainActivity.findGenericIngredient(word);
-            if (gi != null) {
-                // Store found results
-                rec_ing.setGenerics(gi);
-
-                // Remove name from phrase
-                phrase = phrase.replaceFirst("(.*)"+gi.name+"(.*)","$1$2");
-                return phrase.trim();
+            Vector<Integer> word_matches = MainActivity.findGenericIngredientMatches(word);
+            if(!word_matches.isEmpty()) {
+                Log.i(TAG, "word matches:");
+                for (Integer i : word_matches) {
+                    Log.i(TAG, "\ti = " + i);
+                }
             }
+            all_matches.addAll(word_matches);
         }
 
-        Log.e(TAG,"Could not find any GenericIngredient in given phrase: \""+phrase+"\"");
-        // TODO: add new GenericIngredient manually
-        // ...
+        if(all_matches.isEmpty()) {
+            Log.e(TAG, "Could not find any GenericIngredient in given phrase: \"" + phrase + "\"");
+            // TODO: add new GenericIngredient manually
+            // ...
 
-        return null;
+            return null;
+        } else {
+            // Store found results
+            gi = MainActivity.getGenericIngredientAt(all_matches);
+            rec_ing.setGenerics(gi);
+
+            // Remove name from phrase
+            phrase = phrase.replaceFirst("(.*)" + gi.name + "(.*)", "$1$2");
+            return phrase.trim();
+        }
     }
 }

@@ -35,8 +35,8 @@ class RecipeIngredient extends GenericIngredient {
 
     void printIngredient(){
         Log.i(TAG,"Recipe Ingredient - "+
-                amount +
-                ((unit==Unit.self)?" ":" "+unit+" ") +
+                ((amount==-1)?"":amount+" ") +
+                ((unit==Unit.self || amount==-1)?"":unit+" ") +
                 name +
                 ((details==null)?"":", "+details));
     }

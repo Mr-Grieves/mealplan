@@ -20,7 +20,6 @@ import java.io.InputStreamReader;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
-
     private final String TAG = "nvw-main";
     private final String INGREDIENT_TABLE_NAME = "ingredient_table";
 
@@ -129,13 +128,55 @@ public class MainActivity extends AppCompatActivity {
         return ingredient_list;
     }
 
-    public static GenericIngredient findGenericIngredient(String _n){
+    /*public static Vector<GenericIngredient> findGenericIngredient(String _n){
+        Vector<GenericIngredient> matching_gis = new Vector<GenericIngredient>();
         for(GenericIngredient gi : ingredient_list){
-            if(gi.getName().equals(_n)){
-                return gi;
+            if(gi.getName().matches(_n)){
+                matching_gis.add(gi);
             }
         }
-        return null;
+        return matching_gis;
+    }*/
+
+    public static GenericIngredient getGenericIngredientAt(int i){
+        return ingredient_list.get(i);
+    }
+
+    public static GenericIngredient getGenericIngredientAt(Vector<Integer> idxs){
+        if(idxs.size() == 0) {
+            Log.e("nvw-ggi", "Given a 0-length vector");
+            return null;
+        }
+        if(idxs.size() == 1)
+            return getGenericIngredientAt(idxs.firstElement());
+
+        // find the max repeated
+        int count = 0, curr_cnt = 1, freq_num = 0, key;
+        for (int i = 0; i < idxs.size()-1; i++) {
+            key = idxs.get(i);
+            for (int j = i + 1; j < idxs.size(); j++) {
+                if (key == idxs.get(j) && freq_num != key)
+                    curr_cnt++;
+            }
+            if (count < curr_cnt) {
+                count = curr_cnt;
+                curr_cnt = 1;
+                freq_num = key;
+            }
+        }
+        return ingredient_list.get(freq_num);
+    }
+
+    public static Vector<Integer> findGenericIngredientMatches(String _n){
+        Vector<Integer> matching_idxs = new Vector<Integer>();
+        Integer idx = 0;
+        for(GenericIngredient gi : ingredient_list){
+            if(gi.getName().contains(_n)){
+                matching_idxs.add(idx);
+            }
+            idx++;
+        }
+        return matching_idxs;
     }
 
     public void addSpeltBerrieSaladRecipe(){
