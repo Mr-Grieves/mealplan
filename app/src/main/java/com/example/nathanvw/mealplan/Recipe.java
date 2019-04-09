@@ -23,8 +23,8 @@ class Recipe {
     }
 
     void searchAndAddIngredient(String _name, float _amount, Unit _recipe_unit, String _details){
-        Vector<Integer> word_matches = MainActivity.findGenericIngredientMatches(_name);
-        GenericIngredient gi = MainActivity.getGenericIngredientAt(word_matches);
+        Vector<Integer> word_matches = MainActivity.findMatchingGIIndices(_name);
+        GenericIngredient gi = MainActivity.getMostFrequentGenericIngredient(word_matches);
 
         if(gi == null){
             // TODO: add new gi

@@ -66,6 +66,13 @@ class RecipeParser {
         put("cp",Unit.cup);
         put("cup",Unit.cup);
         put("cups",Unit.cup);
+
+        //quarts
+        put("qt",Unit.quart);
+        put("qts",Unit.quart);
+        put("quart",Unit.quart);
+        put("quarts",Unit.quart);
+
     }};
 
     RecipeParser(){}
@@ -99,8 +106,12 @@ class RecipeParser {
         Recipe recipe = new Recipe();
 
         // Regex galore!
+
+        // TODO: detect section headers
+        // ...
+
         //Log.i(TAG,"--------------------------------- ingr_text -------------------------------");
-        String pattern = "(?s)(Ingredients)(.*)(Recipe Preparation)(.*)";
+        String pattern = "(?si)(Ingredients)(.*)(Recipe Preparation)(.*)";
         //Log.i(TAG,"ingredients found: "+(all_text.matches(pattern)?"FOUND":"NOPE"));
         String ingr_text = all_text.replaceAll(pattern,"$2");
 
@@ -116,7 +127,14 @@ class RecipeParser {
         // Parse out all steps from 'Recipe Preparation'
         parseStepsFromText(step_text, recipe);
 
-        return null;
+        String test = "all purpose flour";
+        if(test.matches(".*\\ball\\b.*"))
+            Log.e(TAG,"MATCH");
+        else
+            Log.e(TAG,"NOPE");
+
+
+        return recipe;
     }
 
     void parseIngredientsFromText(String raw_text, Recipe recipe){
@@ -142,39 +160,53 @@ class RecipeParser {
                 phrase = phrase.toLowerCase();
 
                 // 1. search for amounts: "1" or "2 tablespoons"
-                if(rec_ing.getAmount() == -1)
+                if(rec_ing.getAmount() == -1 && !isEmpty(phrase))
                     phrase = searchForAmountAndUnit(phrase, rec_ing);
 
                 // 2. search for stored name: "broccoli"
-                if(rec_ing.getName() == null)
+                if(rec_ing.getName() == null && !isEmpty(phrase))
                     phrase = searchForName(phrase, rec_ing);
 
-                // Add remainder to details:
-                if(phrase != null)
-                    if(!phrase.isEmpty()) {
-                        rec_ing.addDetail(phrase.trim());
-                    }
+                // 3. Add remainder to details:
+                if(!isEmpty(phrase)) rec_ing.addDetail(phrase.trim());
             }
             recipe.addIngredient(rec_ing);
         }
-        recipe.printRecipe();
     }
 
-    void parseStepsFromText(String step_text, Recipe recipe){
+    boolean isEmpty(String s){ return s == null || s.isEmpty(); }
+
+    void parseStepsFromText(String raw_text, Recipe recipe){
         // TODO!
+        String[] steps_text = raw_text.split("\n");
+        for (String step_text: steps_text){
+            // Skip empties
+            if(step_text.matches("^\\s*$")) {
+                Log.i(TAG, "phrase: \""+step_text+"\"");
+                continue;
+            }
+
+            recipe.addNewStep(step_text.trim());
+        }
     }
 
     String searchForAmountAndUnit(String phrase, RecipeIngredient rec_ing){
         ///Log.i(TAG,"before: \""+phrase+"\"");
         // Replace fractions with decimals
+        //TODO: add written out fractions
         phrase = phrase.replaceAll("\\s*¼",".25");
+        phrase = phrase.replaceAll("\\s*1/4",".25");
         phrase = phrase.replaceAll("\\s*⅓",".333");
+        phrase = phrase.replaceAll("\\s*1/3",".333");
         phrase = phrase.replaceAll("\\s*½",".5");
+        phrase = phrase.replaceAll("\\s*1/2",".5");
         phrase = phrase.replaceAll("\\s*⅔",".666");
+        phrase = phrase.replaceAll("\\s*2/3",".666");
         phrase = phrase.replaceAll("\\s*¾",".75");
+        phrase = phrase.replaceAll("\\s*3/4",".75");
 
         // Search for measurements:
-        String both_pat = "(\\d+(\\.\\d+)?)\\s(\\w+).+";
+        String both_pat = "(\\d*(\\.\\d+)?)\\s(\\w+).+";
         String amount_str = phrase.replaceFirst(both_pat,"$1");
         String unit_str = phrase.replaceFirst(both_pat,"$3");
 
@@ -212,15 +244,20 @@ class RecipeParser {
         GenericIngredient gi = null;
 
         // For every word in the given phrase, search the ingredient_table
+        Log.i(TAG,"Splitting: \""+phrase+"\"");
         for (String word : phrase.split("\\s")) {
-            Vector<Integer> word_matches = MainActivity.findGenericIngredientMatches(word);
-            if(!word_matches.isEmpty()) {
+            Vector<Integer> word_matches = MainActivity.findMatchingGIIndices(word);
+            // Single-word match
+            /*if(!word_matches.isEmpty()) {
                 Log.i(TAG, "word matches:");
                 for (Integer i : word_matches) {
                     Log.i(TAG, "\ti = " + i);
                 }
-            }
+            }*/
+
+            // multi-word match
             all_matches.addAll(word_matches);
+            Log.i(TAG,"Match found for \""+word+"\" at idx:"+word_matches.toString());
         }
 
         if(all_matches.isEmpty()) {
@@ -231,7 +268,8 @@ class RecipeParser {
             return null;
         } else {
             // Store found results
-            gi = MainActivity.getGenericIngredientAt(all_matches);
+            gi = MainActivity.getMostFrequentGenericIngredient(all_matches);
+            Log.i(TAG,"Most frequent match is: "+gi.getName());
             rec_ing.setGenerics(gi);
 
             // Remove name from phrase

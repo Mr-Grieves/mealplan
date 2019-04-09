@@ -80,8 +80,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 RecipeParser rp = new RecipeParser();
-                Recipe recipe = rp.parseFromTextFile(assetManager,"broccoli-bolognese.txt");
-                //recipe.printRecipe();
+                //Recipe recipe = rp.parseFromTextFile(assetManager,"broccoli-bolognese.txt");
+                Recipe recipe = rp.parseFromTextFile(assetManager,"lemon-curd-tart.txt");
+                recipe.printRecipe();
             }
         });
 
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         return ingredient_list.get(i);
     }
 
-    public static GenericIngredient getGenericIngredientAt(Vector<Integer> idxs){
+    public static GenericIngredient getMostFrequentGenericIngredient(Vector<Integer> idxs){
         if(idxs.size() == 0) {
             Log.e("nvw-ggi", "Given a 0-length vector");
             return null;
@@ -163,15 +164,23 @@ public class MainActivity extends AppCompatActivity {
                 curr_cnt = 1;
                 freq_num = key;
             }
+            // TODO: if its a tie, take the GI with the shorter name? i.e. laeast other qualifier
+            // ...
+
         }
         return ingredient_list.get(freq_num);
     }
 
-    public static Vector<Integer> findGenericIngredientMatches(String _n){
+    public static Vector<Integer> findMatchingGIIndices(String _n){
         Vector<Integer> matching_idxs = new Vector<Integer>();
         Integer idx = 0;
+
+        // Trim plurals?
+        _n = _n.replaceAll("(.*)(ies$)","$1y");
+        _n = _n.replaceAll("(.*)(s$)","$1");
+
         for(GenericIngredient gi : ingredient_list){
-            if(gi.getName().contains(_n)){
+            if(gi.getName().matches(".*\\b"+_n+"\\b.*")){
                 matching_idxs.add(idx);
             }
             idx++;

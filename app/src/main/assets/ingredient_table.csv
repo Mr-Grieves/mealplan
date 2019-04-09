@@ -2,16 +2,23 @@ broccoli,VEGETABLE,self,5
 olive oil,CONDIMENT,tbsp,300
 garlic,HERB,self,30
 sausage,MEAT,oz,3
-red pepper flakes,SPICE,tsp,400
+red pepper flake,SPICE,tsp,400
 orecchiette,GRAIN,oz,300
-butter,DAIRY,tbsp,100
+butter,DAIRY,cup,100
 parmesan,DAIRY,oz,100
 radish,VEGETABLE,self,7
 plum vinegar,CONDIMENT,tbsp,300
 apple cider vinegar,CONDIMENT,tbsp,300
-spelt berries,GRAIN,cup,300
+spelt berry,GRAIN,cup,300
 peas,VEGETABLE,cup,300
 parsley,HERB,cup,7
 dill,HERB,cup,7
 feta,DAIRY,oz,60
 salt,SPICE,tsp,1000
+egg,DAIRY,self,30
+sugar,BAKING,cup,1000
+lemon,FRUIT,tbsp,20
+all purpose flour,BAKING,cup,600
+strawberry jam,CONDIMENT,tbsp,100
+strawberry,FRUIT,cup,6
+cream,DAIRY,tbsp,15

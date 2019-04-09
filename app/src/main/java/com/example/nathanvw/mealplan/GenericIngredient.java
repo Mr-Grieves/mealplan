@@ -23,7 +23,8 @@ enum FoodGroup {
     MEAT,
     FISH,
     DAIRY,
-    CONDIMENT
+    CONDIMENT,
+    BAKING
 }
 
 enum Unit {
@@ -34,7 +35,8 @@ enum Unit {
     ml,
     tsp,
     tbsp,
-    cup
+    cup,
+    quart
 }
 
 class GenericIngredient {
