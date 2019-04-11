@@ -4,6 +4,18 @@ import android.util.Log;
 
 import java.util.Vector;
 
+enum Unit {
+    self,
+    g,
+    oz,
+    lb,
+    ml,
+    tsp,
+    tbsp,
+    cup,
+    quart
+}
+
 /**
  * Created by nathanvw on 4/1/19.
  *
@@ -19,18 +31,21 @@ class RecipeIngredient extends GenericIngredient {
 
     private String details;
     private float amount;
+    private Unit unit;
     //TODO: private float amnt_used = 0;
 
     RecipeIngredient(){
         super();
         this.amount = -1;
+        this.unit = Unit.self;
         details = null;
     }
 
-    RecipeIngredient(GenericIngredient _ing, float _tot, String _deets){
+    RecipeIngredient(GenericIngredient _ing, float _tot, Unit _u, String _deets){
         super(_ing);
-        this.details = _deets;
         this.amount = _tot;
+        this.unit = _u;
+        this.details = _deets;
     }
 
     void printIngredient(){
@@ -50,4 +65,6 @@ class RecipeIngredient extends GenericIngredient {
         else
             this.details = this.details + ", " + _s;
     }
+    void setUnit(Unit _u){this.unit = _u;}
+    Unit getUnit(){return this.unit;}
 }

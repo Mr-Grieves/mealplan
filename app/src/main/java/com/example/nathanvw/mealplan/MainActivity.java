@@ -17,6 +17,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity {
@@ -80,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 RecipeParser rp = new RecipeParser();
-                //Recipe recipe = rp.parseFromTextFile(assetManager,"broccoli-bolognese.txt");
-                Recipe recipe = rp.parseFromTextFile(assetManager,"lemon-curd-tart.txt");
+                Recipe recipe = rp.parseFromTextFile(assetManager,"broccoli-bolognese.txt");
+                //Recipe recipe = rp.parseFromTextFile(assetManager,"lemon-curd-tart.txt");
                 recipe.printRecipe();
             }
         });
@@ -115,8 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     GenericIngredient new_ingredient = new GenericIngredient(
                             line_str[0],                        // name
                             FoodGroup.valueOf(line_str[1]),     // FoodGroup
-                            Unit.valueOf(line_str[2]),          // Unit
-                            Integer.parseInt(line_str[3]));     // shelflife
+                            Integer.parseInt(line_str[2]));     // shelflife
 
                     ingredient_list.add(new_ingredient);
                 }
@@ -143,41 +146,47 @@ public class MainActivity extends AppCompatActivity {
         return ingredient_list.get(i);
     }
 
-    public static GenericIngredient getMostFrequentGenericIngredient(Vector<Integer> idxs){
-        if(idxs.size() == 0) {
+    public static GenericIngredient getMostFrequentGenericIngredient(Vector<Integer> a){
+        if(a.size() == 0) {
             Log.e("nvw-ggi", "Given a 0-length vector");
             return null;
         }
-        if(idxs.size() == 1)
-            return getGenericIngredientAt(idxs.firstElement());
+        if(a.size() == 1)
+            return getGenericIngredientAt(a.firstElement());
 
-        // find the max repeated
-        int count = 0, curr_cnt = 1, freq_num = 0, key;
-        for (int i = 0; i < idxs.size()-1; i++) {
-            key = idxs.get(i);
-            for (int j = i + 1; j < idxs.size(); j++) {
-                if (key == idxs.get(j) && freq_num != key)
-                    curr_cnt++;
-            }
-            if (count < curr_cnt) {
-                count = curr_cnt;
-                curr_cnt = 1;
-                freq_num = key;
-            }
-            // TODO: if its a tie, take the GI with the shorter name? i.e. laeast other qualifier
-            // ...
-
+        // First make a map of given indices -> frequencies
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        for (int i : a) {
+            Integer count = map.get(i);
+            map.put(i, count != null ? count+1 : 0);
         }
-        return ingredient_list.get(freq_num);
+
+        //for(Map.Entry<Integer,Integer> i : map.entrySet())
+        //    Log.e("nvw-fuck",i.getKey()+" -> "+i.getValue());
+
+        //Now, we find the number with the maximum frequency and return it:
+        Integer popular = Collections.max(map.entrySet(),
+                new Comparator<Map.Entry<Integer, Integer>>() {
+                    @Override
+                    public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+                        int comp = o1.getValue().compareTo(o2.getValue());
+                        if (comp != 0)
+                            return comp;
+                        else {
+                            int diff = ingredient_list.get(o2.getKey()).getName().length() -
+                                    ingredient_list.get(o1.getKey()).getName().length();
+                            //Log.e("nvw-FUCKME", " equal lengths detected! returning: "+diff);
+                            return diff;
+                        }
+                    }
+                }).getKey();
+
+        return ingredient_list.get(popular);
     }
 
     public static Vector<Integer> findMatchingGIIndices(String _n){
         Vector<Integer> matching_idxs = new Vector<Integer>();
         Integer idx = 0;
-
-        // Trim plurals?
-        _n = _n.replaceAll("(.*)(ies$)","$1y");
-        _n = _n.replaceAll("(.*)(s$)","$1");
 
         for(GenericIngredient gi : ingredient_list){
             if(gi.getName().matches(".*\\b"+_n+"\\b.*")){

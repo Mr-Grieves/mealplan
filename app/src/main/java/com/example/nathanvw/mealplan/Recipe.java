@@ -22,7 +22,7 @@ class Recipe {
         this.steps = new Vector<RecipeStep>();
     }
 
-    void searchAndAddIngredient(String _name, float _amount, Unit _recipe_unit, String _details){
+    void searchAndAddIngredient(String _name, float _amount, Unit _unit, String _details){
         Vector<Integer> word_matches = MainActivity.findMatchingGIIndices(_name);
         GenericIngredient gi = MainActivity.getMostFrequentGenericIngredient(word_matches);
 
@@ -32,12 +32,12 @@ class Recipe {
             return;
         }
 
-        if(gi.getUnit() != _recipe_unit){
+        /*if(gi.getUnit() != _recipe_unit){
             Log.w(TAG, "Stored unit for "+_name+" ("+gi.getUnit()+") is different than recipe's ("+_recipe_unit+")");
             // TODO: convert _unit to gi.getUnit()
 
-        }
-        ingredients.add(new RecipeIngredient(gi, _amount, _details));
+        }*/
+        ingredients.add(new RecipeIngredient(gi, _amount, _unit, _details));
     }
 
     void addNewStep(String raw_text){

@@ -27,25 +27,12 @@ enum FoodGroup {
     BAKING
 }
 
-enum Unit {
-    self,
-    g,
-    oz,
-    lb,
-    ml,
-    tsp,
-    tbsp,
-    cup,
-    quart
-}
-
 class GenericIngredient {
     private static final String TAG = "nvw-ing";
-    public static final int NUM_INGREDIENT_PROPERTIES = 4;
+    public static final int NUM_INGREDIENT_PROPERTIES = 3;
 
     protected String name;
     protected FoodGroup group;
-    protected Unit unit;
     protected int shelflife; // days
 
     // Potential optimizers
@@ -55,37 +42,32 @@ class GenericIngredient {
     GenericIngredient(){
         this.name = null;
         this.group = FoodGroup.UNKNOWN;
-        this.unit = Unit.self;
         this.shelflife = -1;
     }
 
     GenericIngredient(GenericIngredient _ing){
         this.name = _ing.name;
         this.group = _ing.group;
-        this.unit = _ing.unit;
         this.shelflife = _ing.shelflife;
     }
 
-    GenericIngredient(String _name, FoodGroup _fg, Unit _u, int _sl){
+    GenericIngredient(String _name, FoodGroup _fg, int _sl){
         this.name = _name;
         this.group = _fg;
-        this.unit = _u;
         this.shelflife = _sl;
     }
 
     void setGenerics(GenericIngredient _gi){
         this.name = _gi.name;
         this.group = _gi.group;
-        this.unit = _gi.unit;
         this.shelflife = _gi.shelflife;
     }
 
     void printIngredient(){
-        Log.i(TAG,"Ingredient - Name: "+String.format("%-20s",name)+"Group: "+String.format("%-12s",group)+"Unit: "+String.format("%-7s",unit)+"Shelflife: "+shelflife+" days");
+        Log.i(TAG,"Ingredient - Name: "+String.format("%-20s",name)+"Group: "+String.format("%-12s",group)+"Shelflife: "+shelflife+" days");
     }
 
     String getName(){return this.name;}
-    Unit getUnit(){return this.unit;}
-    void setUnit(Unit _u){this.unit = _u;}
+    //void setUnit(Unit _u){this.unit = _u;}
 }
 

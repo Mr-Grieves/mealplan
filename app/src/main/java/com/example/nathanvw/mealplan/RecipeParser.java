@@ -127,13 +127,6 @@ class RecipeParser {
         // Parse out all steps from 'Recipe Preparation'
         parseStepsFromText(step_text, recipe);
 
-        String test = "all purpose flour";
-        if(test.matches(".*\\ball\\b.*"))
-            Log.e(TAG,"MATCH");
-        else
-            Log.e(TAG,"NOPE");
-
-
         return recipe;
     }
 
@@ -166,6 +159,7 @@ class RecipeParser {
                 // 2. search for stored name: "broccoli"
                 if(rec_ing.getName() == null && !isEmpty(phrase))
                     phrase = searchForName(phrase, rec_ing);
+                    //Log.i(TAG,"after name removed: \""+phrase+"\"");
 
                 // 3. Add remainder to details:
                 if(!isEmpty(phrase)) rec_ing.addDetail(phrase.trim());
@@ -191,9 +185,9 @@ class RecipeParser {
     }
 
     String searchForAmountAndUnit(String phrase, RecipeIngredient rec_ing){
-        ///Log.i(TAG,"before: \""+phrase+"\"");
+        //Log.i(TAG,"before: \""+phrase+"\"");
         // Replace fractions with decimals
-        //TODO: add written out fractions
+        //TODO: only do this once on the whole recipe text
         phrase = phrase.replaceAll("\\s*¼",".25");
         phrase = phrase.replaceAll("\\s*1/4",".25");
         phrase = phrase.replaceAll("\\s*⅓",".333");
@@ -225,6 +219,7 @@ class RecipeParser {
             if (known_measurements.containsKey(unit_str)) {
                 rec_ing.setUnit(known_measurements.get(unit_str));
                 phrase = phrase.replaceAll("(.*)" + unit_str + "(.*)", "$1$2");
+                //Log.i(TAG,"Setting unit as: "+known_measurements.get(unit_str));
             } else {
                 Log.i(TAG, "No unit detected, leaving as SELF: \""+phrase+"\"");
             }
@@ -242,11 +237,18 @@ class RecipeParser {
 
         Vector<Integer> all_matches = new Vector<Integer>();
         GenericIngredient gi = null;
+        String last_plural_word = null;
 
         // For every word in the given phrase, search the ingredient_table
-        Log.i(TAG,"Splitting: \""+phrase+"\"");
+        //Log.i(TAG,"Splitting: \""+phrase+"\"");
         for (String word : phrase.split("\\s")) {
-            Vector<Integer> word_matches = MainActivity.findMatchingGIIndices(word);
+            // Trim plurals?
+            if(word.matches(".*s$")) {
+                last_plural_word = word;
+                word = word.replaceAll("(.*)(ies$)", "$1y");
+                word = word.replaceAll("(.*)(s$)", "$1");
+            }
+
             // Single-word match
             /*if(!word_matches.isEmpty()) {
                 Log.i(TAG, "word matches:");
@@ -256,8 +258,9 @@ class RecipeParser {
             }*/
 
             // multi-word match
+            Vector<Integer> word_matches = MainActivity.findMatchingGIIndices(word);
             all_matches.addAll(word_matches);
-            Log.i(TAG,"Match found for \""+word+"\" at idx:"+word_matches.toString());
+            //Log.i(TAG,"Match found for \""+word+"\" at idx:"+word_matches.toString());
         }
 
         if(all_matches.isEmpty()) {
@@ -269,12 +272,18 @@ class RecipeParser {
         } else {
             // Store found results
             gi = MainActivity.getMostFrequentGenericIngredient(all_matches);
-            Log.i(TAG,"Most frequent match is: "+gi.getName());
+            //Log.i(TAG,"Most frequent match is: "+gi.getName());
             rec_ing.setGenerics(gi);
 
             // Remove name from phrase
-            phrase = phrase.replaceFirst("(.*)" + gi.name + "(.*)", "$1$2");
-            return phrase.trim();
+            if (phrase.matches(".*\\b" + gi.name + "\\b.*")) {
+                return phrase.replaceFirst("(.*)" + gi.name + "\\s?(.*)", "$1$2").trim();
+            }else {// Damn plurals...
+                // replace the last word in gi.name with last_plural_word
+                String pluralled = gi.name.replaceAll("(.*)\\b(\\w+)", "$1"+last_plural_word);
+                //Log.i(TAG,"replacing with "+pluralled);
+                return phrase.replaceFirst("(.*)" + pluralled + "\\s?(.*)", "$1$2").trim();
+            }
         }
     }
 }
