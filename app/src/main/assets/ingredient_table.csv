@@ -1,24 +1,38 @@
-broccoli,VEGETABLE,5
-olive oil,CONDIMENT,300
-garlic,HERB,30
-sausage,MEAT,3
-red pepper flake,SPICE,400
-orecchiette,GRAIN,300
-butter,DAIRY,100
-parmesan,DAIRY,100
-radish,VEGETABLE,7
-plum vinegar,CONDIMENT,300
-apple cider vinegar,CONDIMENT,300
-spelt berry,GRAIN,300
-peas,VEGETABLE,300
-parsley,HERB,7
-dill,HERB,7
-feta,DAIRY,60
-salt,SPICE,1000
-egg,DAIRY,30
-sugar,BAKING,1000
-lemon,FRUIT,20
-all purpose flour,BAKING,600
-strawberry jam,CONDIMENT,100
-strawberry,FRUIT,6
-cream,DAIRY,15
+broccoli,VEGETABLE,self,5
+olive oil,CONDIMENT,ml,300
+garlic,HERB,self,30
+sausage,MEAT,self,3
+red pepper flake,SPICE,tsp,400
+orecchiette,GRAIN,cup,300
+butter,DAIRY,cup,100
+parmesan,DAIRY,cup,100
+radish,VEGETABLE,self,7
+plum vinegar,CONDIMENT,ml,300
+apple cider vinegar,CONDIMENT,ml,300
+spelt berry,GRAIN,cup,300
+peas,VEGETABLE,cup,300
+parsley,HERB,self,7
+dill,HERB,self,7
+feta,DAIRY,cup,60
+salt,SPICE,tsp,1000
+egg,DAIRY,self,30
+sugar,BAKING,cup,1000
+lemon,FRUIT,self,20
+all purpose flour,BAKING,cup,600
+jam,CONDIMENT,tbsp,100
+strawberry,FRUIT,qt,6
+cream,DAIRY,ml,15
+baking powder,BAKING,tsp,600
+milk,DAIRY,ml,10
+vanilla extract,BAKING,tsp,300
+mushroom,VEGETABLE,oz,7
+pork,MEAT,lb,4
+fish sauce,CONDIMENT,ml,300
+peanut,LEGUME,cup,100
+scallion/green onion,HERB,self,10
+ginger,HERB,inch,300
+shallot,VEGETABLE,self,10
+mint,HERB,self,6
+lime,FRUIT,self,15
+chile,HERB,self,60
+cabbage,VEGETABLE,self,7

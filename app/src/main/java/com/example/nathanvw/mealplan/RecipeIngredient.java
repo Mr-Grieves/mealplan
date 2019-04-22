@@ -4,18 +4,6 @@ import android.util.Log;
 
 import java.util.Vector;
 
-enum Unit {
-    self,
-    g,
-    oz,
-    lb,
-    ml,
-    tsp,
-    tbsp,
-    cup,
-    quart
-}
-
 /**
  * Created by nathanvw on 4/1/19.
  *
@@ -31,29 +19,46 @@ class RecipeIngredient extends GenericIngredient {
 
     private String details;
     private float amount;
-    private Unit unit;
+    private Unit recipe_unit;
     //TODO: private float amnt_used = 0;
 
     RecipeIngredient(){
         super();
         this.amount = -1;
-        this.unit = Unit.self;
-        details = null;
+        this.recipe_unit = Unit.NA;
+        this.details = null;
     }
 
-    RecipeIngredient(GenericIngredient _ing, float _tot, Unit _u, String _deets){
+    RecipeIngredient(GenericIngredient _ing, float _tot, Unit _ru, String _deets){
         super(_ing);
         this.amount = _tot;
-        this.unit = _u;
+        this.recipe_unit = _ru;
         this.details = _deets;
     }
 
     void printIngredient(){
         Log.i(TAG,"Recipe Ingredient - "+
                 ((amount==-1)?"":amount+" ") +
-                ((unit==Unit.self || amount==-1)?"":unit+" ") +
+                ((recipe_unit==Unit.self || amount==-1)?"":recipe_unit+" ") +
                 name +
                 ((details==null)?"":", "+details));
+    }
+
+    boolean checkIfValid(){
+        if (this.name == null) {
+            Log.e(TAG, "INVALID ING: Has no name");
+            return false;
+        } else if(this.recipe_unit == Unit.NA) {
+            Log.e(TAG, "INVALID ING: Has no recipe unit");
+            return false;
+        } else if(this.amount == -1) {
+            Log.w(TAG,this.name+" has no amount, preoceeding...");
+            return true;
+        } else {
+            Log.v(TAG, "Valid ingredient added: " + this.name+"\n");
+            return true;
+        }
+
     }
 
     float getAmount(){return this.amount;}
@@ -65,6 +70,6 @@ class RecipeIngredient extends GenericIngredient {
         else
             this.details = this.details + ", " + _s;
     }
-    void setUnit(Unit _u){this.unit = _u;}
-    Unit getUnit(){return this.unit;}
+    void setRecipeUnit(Unit _ru){this.recipe_unit = _ru;}
+    Unit getRecipeUnit(){return this.recipe_unit;}
 }

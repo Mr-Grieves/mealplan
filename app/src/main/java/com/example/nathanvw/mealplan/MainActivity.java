@@ -84,9 +84,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 RecipeParser rp = new RecipeParser();
-                Recipe recipe = rp.parseFromTextFile(assetManager,"broccoli-bolognese.txt");
-                //Recipe recipe = rp.parseFromTextFile(assetManager,"lemon-curd-tart.txt");
-                recipe.printRecipe();
+                rp.parseFromTextFile(assetManager,"broccoli-bolognese.txt").printRecipe();
+                rp.parseFromTextFile(assetManager,"lemon-curd-tart.txt").printRecipe();
+                rp.parseFromTextFile(assetManager,"strawberry-summer-cake.txt").printRecipe();
+                rp.parseFromTextFile(assetManager,"mushroom-larb.txt").printRecipe();
             }
         });
 
@@ -119,7 +120,8 @@ public class MainActivity extends AppCompatActivity {
                     GenericIngredient new_ingredient = new GenericIngredient(
                             line_str[0],                        // name
                             FoodGroup.valueOf(line_str[1]),     // FoodGroup
-                            Integer.parseInt(line_str[2]));     // shelflife
+                            Unit.valueOf(line_str[2]),
+                            Integer.parseInt(line_str[3]));     // shelflife
 
                     ingredient_list.add(new_ingredient);
                 }

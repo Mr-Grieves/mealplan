@@ -9,10 +9,18 @@ import android.util.Log;
  * It holds all the information specific to the ingredient itself, but nothing about how it is used in recipes
  *
  * The ingredient table .csv stores the database of all known ingredients
+ *
+ * 4/21/19: this should be optimized for referencing while creating shopping lists
+ *          aka: it should represent 'grocery store' ingredients.
+ *          - We need to re-instate unit (that they would sell in grocery store)
+ *          - we need different ingredient_table entries for details pertinent at buytime
+ *          - still unclear about what units to actually use in the ingredient table. It should be
+ *              what you would see in the store, but that adds another level of complexity in the
+ *              conversions you would need to do...
+ *
  */
 
 enum FoodGroup {
-    UNKNOWN,
     FRUIT,
     VEGETABLE,
     HERB,
@@ -24,15 +32,31 @@ enum FoodGroup {
     FISH,
     DAIRY,
     CONDIMENT,
-    BAKING
+    BAKING,
+    NA
+}
+
+enum Unit {
+    self,
+    g,
+    oz,
+    lb,
+    ml,
+    tsp,
+    tbsp,
+    cup,
+    qt,
+    inch,
+    NA
 }
 
 class GenericIngredient {
     private static final String TAG = "nvw-ing";
-    public static final int NUM_INGREDIENT_PROPERTIES = 3;
+    public static final int NUM_INGREDIENT_PROPERTIES = 4;
 
     protected String name;
     protected FoodGroup group;
+    protected Unit unit;
     protected int shelflife; // days
 
     // Potential optimizers
@@ -41,7 +65,8 @@ class GenericIngredient {
 
     GenericIngredient(){
         this.name = null;
-        this.group = FoodGroup.UNKNOWN;
+        this.group = FoodGroup.NA;
+        this.unit = Unit.NA;
         this.shelflife = -1;
     }
 
@@ -51,9 +76,10 @@ class GenericIngredient {
         this.shelflife = _ing.shelflife;
     }
 
-    GenericIngredient(String _name, FoodGroup _fg, int _sl){
+    GenericIngredient(String _name, FoodGroup _fg, Unit _u, int _sl){
         this.name = _name;
         this.group = _fg;
+        this.unit = _u;
         this.shelflife = _sl;
     }
 
@@ -64,7 +90,10 @@ class GenericIngredient {
     }
 
     void printIngredient(){
-        Log.i(TAG,"Ingredient - Name: "+String.format("%-20s",name)+"Group: "+String.format("%-12s",group)+"Shelflife: "+shelflife+" days");
+        Log.i(TAG,"Ingredient - Name: "+String.format("%-20s",name)+
+                "Group: "+String.format("%-12s",group)+
+                "Unit: "+String.format("%-12s",unit)+
+                "Shelflife: "+shelflife+" days");
     }
 
     String getName(){return this.name;}
